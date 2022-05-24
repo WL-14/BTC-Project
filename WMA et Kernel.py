@@ -18,7 +18,7 @@ df2017 = df.loc['2019-02-01':'2019-04-30']
 ts = df2017['PriceUSD']
 
 #WMA
-def wma(df, column='PriceUSD', n=180, add_col=False):
+def wma(df, column='PriceUSD', n=0, add_col=False):
     weights= np.arange(1, n+1)
     wmas= df[column].rolling(n).apply(lambda x: np.dot(x,weights) / weights.sum(), raw=True)
     
@@ -29,10 +29,21 @@ def wma(df, column='PriceUSD', n=180, add_col=False):
         return wmas
 
 
-BTC_WMA=wma(df2017)
+
 fig, ax = plt.subplots(figsize = (15, 7))
 ax.plot(df2017["PriceUSD"], linestyle='-', linewidth=0.7, label='Daily')
-ax.plot(BTC_WMA, color = 'red', linewidth=1.7, label='WMA n jours')
+BTC_WMA=wma(df2017,'PriceUSD',7)
+ax.plot(BTC_WMA, color = 'red', linewidth=1.7, label='WMA 7 jours')
+BTC_WMA=wma(df2017,'PriceUSD',15)
+ax.plot(BTC_WMA, color = 'blue', linewidth=1.7, label='WMA 15 jours')
+BTC_WMA=wma(df2017,'PriceUSD',30)
+ax.plot(BTC_WMA, color = 'yellow', linewidth=1.7, label='WMA 30 jours')
+BTC_WMA=wma(df2017,'PriceUSD',60)
+ax.plot(BTC_WMA, color = 'green', linewidth=1.7, label='WMA 60 jours')
+BTC_WMA=wma(df2017,'PriceUSD',90)
+ax.plot(BTC_WMA, color = 'purple', linewidth=1.7, label='WMA 90 jours')
+BTC_WMA=wma(df2017,'PriceUSD',180)
+ax.plot(BTC_WMA, color = 'pink', linewidth=1.7, label='WMA 180 jours')
 ax.legend();
 
 
@@ -89,7 +100,7 @@ for i in breaks:
 breaks_rpt = pd.to_datetime(breaks_rpt)
 breaks_rpt
 
-plt.plot(ts, label='data')
+#plt.plot(ts, label='data')
 plt.title('PriceUSD')
 print_legend = True
 for i in breaks_rpt:
